@@ -9,9 +9,6 @@
 			background-size: cover;
 		}
 		
-		{width: 250px;
-				 border-collapse: collapse;
-				 border: 1px solid black;}
 		thead { background-color: blue;
 				color: white;}
 		td	{ text-align: center;}
@@ -25,15 +22,12 @@
 		{
 		   var length = localStorage.length; // number of key-value pairs
 		   k = []; // create empty array
-
 		   // load all keys
 		   for (var i = 0; i < length; ++i) 
 		   {
 			  k[i] = localStorage.key(i);
 		   } // end for
-
 		   k.sort(); // sort the keys
-
 		   
 		}
 		
@@ -70,7 +64,6 @@
 		var isIE = (d.all)? true: false;
 		/* 設定畫板的名稱 */
 		var DRAWING_BOARD_NAME = 'drawing_board';
-
 		/* 取得座標位置 */
 		p = {
 			x: function (e){
@@ -82,11 +75,9 @@
 				return _e.pageY || _e.clientY+varTop;
 			}
 		};
-
 		function $(O){
 			return d.getElementById(O)
 		}
-
 		/* 清除畫板 */
 		function Clear(){
 			var _e = $(DRAWING_BOARD_NAME);
@@ -95,7 +86,6 @@
 				_e.removeChild(_e.childNodes[0]);
 			}
 		}
-
 		/* 繪圖 */
 		function Draw(X,Y,W,H,C){
 			var _e = d.createElement('div'),styleSyntax = [];
@@ -109,7 +99,6 @@
 					height     = H;
 					background = C;
 				}
-
 			}else{
 				with(styleSyntax){
 					push('width:'+W+'px;height:'+H+'px;background:'+C+';');
@@ -119,14 +108,12 @@
 			}
 			$(DRAWING_BOARD_NAME).appendChild(_e);
 		}
-
 		/* 設定點的樣式 */
 		function setStyle (){
 			W = $('inpWidth').value;
 			H = $('inpHeight').value;
 			C = $('selColor').value;
 		}
-
 		window.onload = function (){
 			var _e = $(DRAWING_BOARD_NAME);
 			setStyle();
@@ -135,7 +122,6 @@
 			if(isIE){
 				d.onselectstart = new Function ("return false");
 			}
-
 			var mouseMove = false;
 			_e.onmousedown = function (e){
 				mouseMove = true;        
@@ -189,6 +175,9 @@
         <input type="button"  value="Set style" onclick="setStyle()">
     </div>
     <!-- 畫板 -->
+	
+	<h3>手繪插圖</h3>
+	
     <div id="drawing_board" style="float:left; background:White; width:500px; height:500px; border-style: solid;"></div>
 	<!--------------------- 繪圖 ---------------------->
 	
