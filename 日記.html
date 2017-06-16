@@ -8,7 +8,8 @@
 			background:url(back.png) center center fixed no-repeat;
 			background-size: cover;
 		}
-		table	{width: 250px;
+		
+		{width: 250px;
 				 border-collapse: collapse;
 				 border: 1px solid black;}
 		thead { background-color: blue;
@@ -33,16 +34,7 @@
 
 		   k.sort(); // sort the keys
 
-		   var markup = "<table border = '1'><thead><tr><th>日期</th><th>日記內容</th></tr></thead><tbody>"; // used to store search link markup
-
-		   // build list of links
-		   for (var tag in k) 
-		   {
-			  markup += "<tr><td>" + k[tag] + 
-				 "</td><td>" + localStorage.getItem(k[tag]) + "</td></tr>";
-		   }
-		   markup += "</tbody></table>";
-		   document.getElementById("storage").innerHTML = markup;
+		   
 		}
 		
 		function save() 
