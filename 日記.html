@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type"/>
+	<title>日記</title>
+	<style>
+		body{
+			background:url(back.png) center center fixed no-repeat;
+			background-size: cover;
+		}
+		table	{width: 250px;
+				 border-collapse: collapse;
+				 border: 1px solid black;}
+		thead { background-color: blue;
+				color: white;}
+		td	{ text-align: center;}
+		tbody	{ background-color: lightblue;}
+	</style>
+	<script>
+		//---------------------------------日記------------------------------
+		var v;
+		
+		function loadSearches() 
+		{
+		   var length = localStorage.length; // number of key-value pairs
+		   k = []; // create empty array
+
+		   // load all keys
+		   for (var i = 0; i < length; ++i) 
+		   {
+			  k[i] = localStorage.key(i);
+		   } // end for
+
+		   k.sort(); // sort the keys
+
+		   var markup = "<table border = '1'><thead><tr><th>日期</th><th>日記內容</th></tr></thead><tbody>"; // used to store search link markup
+
+		   // build list of links
+		   for (var tag in k) 
+		   {
+			  markup += "<tr><td>" + k[tag] + 
+				 "</td><td>" + localStorage.getItem(k[tag]) + "</td></tr>";
+		   }
+		   markup += "</tbody></table>";
+		   document.getElementById("storage").innerHTML = markup;
+		}
+		
+		function save() 
+		{
+		   var bookdate = document.getElementById("bookdate");
+		   var Content = document.getElementById("Content");
+		   localStorage.setItem(bookdate.value, Content.value); 
+		   Content.value = ""; // clear Content input
+		   bookdate.value = ""; // clear bookdate input
+		   loadSearches(); // reload searches
+		} // end function saveSearch
+		
+		function clearAll() 
+		{
+		   localStorage.clear();
+		   loadSearches(); // reload searches
+		}
+		
+		function start()
+		{
+		   var addButton = document.getElementById( "addButton" );
+		   addButton.addEventListener( "click", save, false );
+		   var removeButton = document.getElementById( "removeButton" );
+		   removeButton.addEventListener( "click", clearAll, false );
+		   loadSearches(); // load the previously saved searches
+		}
+		
+		window.addEventListener( "load", start, false );
+		//---------------------------------日記------------------------------
+		
+		//---------------------------------畫板------------------------------
+		var d = document;
+		var isIE = (d.all)? true: false;
+		/* 設定畫板的名稱 */
+		var DRAWING_BOARD_NAME = 'drawing_board';
+
+		/* 取得座標位置 */
+		p = {
+			x: function (e){
+				var _e=(e)?e:event,varLeft = d.documentElement.scrollLeft || d.body.scrollLeft;
+				return _e.pageX || _e.clientX+varLeft;
+			},
+			y: function (e){
+				var _e=(e)?e:event,varTop = d.documentElement.scrollTop || d.body.scrollTop;
+				return _e.pageY || _e.clientY+varTop;
+			}
+		};
+
+		function $(O){
+			return d.getElementById(O)
+		}
+
+		/* 清除畫板 */
+		function Clear(){
+			var _e = $(DRAWING_BOARD_NAME);
+			var _collect = _e.childNodes.length;
+			for(i=0;i<_collect;i++){
+				_e.removeChild(_e.childNodes[0]);
+			}
+		}
+
+		/* 繪圖 */
+		function Draw(X,Y,W,H,C){
+			var _e = d.createElement('div'),styleSyntax = [];
+			if(isIE){
+			/* 在 Internet Explorer 7 setAttribute 無法設定 style 屬性*/
+				with(_e.style){
+					position   = 'absolute';
+					left       = (X-(W/2));
+					top        = (Y-(H/2));
+					width      = W;
+					height     = H;
+					background = C;
+				}
+
+			}else{
+				with(styleSyntax){
+					push('width:'+W+'px;height:'+H+'px;background:'+C+';');
+					push('position:absolute;left:'+(X-(W/2))+'px;top:'+(Y-(H/2))+'px;');
+					_e.setAttribute('style',styleSyntax.join(''));
+				}
+			}
+			$(DRAWING_BOARD_NAME).appendChild(_e);
+		}
+
+		/* 設定點的樣式 */
+		function setStyle (){
+			W = $('inpWidth').value;
+			H = $('inpHeight').value;
+			C = $('selColor').value;
+		}
+
+		window.onload = function (){
+			var _e = $(DRAWING_BOARD_NAME);
+			setStyle();
+			
+			/* 停用選取 */
+			if(isIE){
+				d.onselectstart = new Function ("return false");
+			}
+
+			var mouseMove = false;
+			_e.onmousedown = function (e){
+				mouseMove = true;        
+				Draw(p.x(e),p.y(e),W,H,C);
+			};
+			_e.onmousemove = function (e){
+				if(mouseMove){
+					Draw(p.x(e),p.y(e),W,H,C);
+				}
+			};
+			_e.onmouseup = function (e){
+				mouseMove = false;
+			};
+		};
+		//---------------------------------畫板------------------------------
+	</script>
+</head>
+
+
+<body>
+	<!--------------------- 日期 內容 ---------------------->
+	<form action = "#">
+		<label for="bookdate">日期：</label>
+		<input type="date" id="bookdate"><br>
+		日記內容：<textarea id="Content"></textarea><br>
+		<p><input id = "addButton" type = "button" value = "儲存">
+		<input id = "removeButton" type = "button" value = "清除所有資料"></p>
+	</form>
+	<!--------------------- 日期 內容 ---------------------->
+	
+	
+	<!--------------------- 繪圖 ---------------------->
+	<!-- 樣式設定 -->
+    <div style="padding:5px; width:200px; float:left; background:#F2F2F2;">
+        <ul>
+            <li>Width : <input id="inpWidth" type="text" value="10" style="width:30px"/></li>
+            <li>Height : <input id="inpHeight" type="text" value="10" style="width:30px"/></li>
+            <li>Color :<br />
+                <select id="selColor" size="3" style="height:121px;" >
+                    <option style="color:Red" selected="selected" value="Red">Red</option>
+                    <option style="color:Orange" value="Orange">Orange</option>
+					<option style="color:Yellow" value="Yellow">Yellow</option>
+					<option style="color:Green" value="Green">Green</option>
+					<option style="color:Blue" value="Blue">Blue</option>
+					<option style="color:Purple" value="Purple">Purple</option>
+					<option style="color:Black" value="White">White</option>
+                </select>
+            </li>
+        </ul>
+        <input type="button"  value="Clean up" onclick="Clear()">
+        <input type="button"  value="Set style" onclick="setStyle()">
+    </div>
+    <!-- 畫板 -->
+    <div id="drawing_board" style="float:left; background:White; width:500px; height:500px; border-style: solid;"></div>
+	<!--------------------- 繪圖 ---------------------->
+	
+	
+	<!------------------- 儲存內容 -------------------->
+	<div id = "storage"></div>
+</body>
+</html>
